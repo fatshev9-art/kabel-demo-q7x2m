@@ -1,0 +1,55 @@
+/* ImageGen 06: equipment request drawer. Existing request controls stay native. */
+#rq{width:min(560px,100%);height:100dvh;max-height:100dvh;background:#fff;color:var(--ink)}
+#rq .rq__head{padding:24px;gap:16px;flex-shrink:0;align-items:flex-start}
+#rq .rq__title{font:700 38px/1.06 'Kabel Display',sans-serif;letter-spacing:-.015em;max-width:410px;margin:0;text-transform:none;color:var(--ink)}
+#rq .rq__x{flex-shrink:0;background:#fff;min-width:44px;min-height:44px}
+#rq .rq__body{padding:0 24px 24px;min-height:0}
+#rq .rq__list{list-style:none;padding:0;margin:0}
+#rq .rq__empty{padding-block:28px;font-size:16px;line-height:1.55}
+#rq .rq__item{grid-template-columns:minmax(0,1fr) auto;column-gap:20px;row-gap:14px;padding:26px 0;align-items:start}
+#rq .rq__item.has-thumb{grid-template-columns:112px minmax(0,1fr) auto}
+#rq .rq__thumb{display:block;grid-row:1/3;grid-column:1;width:112px;height:112px;object-fit:contain;background:var(--paper)}
+#rq .rq__info{grid-column:1/-1;min-width:0;gap:7px}
+#rq .rq__item.has-thumb .rq__info{grid-column:2/-1}
+#rq .rq__sku{font-size:12px;font-weight:400;letter-spacing:.11em;color:var(--link);overflow-wrap:anywhere}
+#rq .rq__name{font-size:18px;line-height:1.25;font-weight:600;overflow-wrap:anywhere}
+#rq .rq__qty{grid-column:1;grid-row:2;justify-self:start;align-self:center;height:46px;background:#fff}
+#rq .rq__item.has-thumb .rq__qty{grid-column:2}
+#rq .rq__step{width:42px;min-width:42px;height:44px;font-size:20px;cursor:pointer}
+#rq .rq__step[aria-disabled=true]{opacity:.35;cursor:default}
+#rq .rq__num{min-width:34px;font-size:15px;font-weight:600}
+#rq .rq__del{grid-column:2;grid-row:2;align-self:center;justify-self:end;font-size:14px;line-height:1.3;min-height:44px;color:var(--ink);text-underline-offset:3px;cursor:pointer}
+#rq .rq__item.has-thumb .rq__del{grid-column:3}
+#rq .rq__summary{padding:22px 0 0;border-top:1px solid var(--line);margin:0;font-size:14px;line-height:1.5;color:var(--muted)}
+#rq .rq__summary strong{display:block;margin-top:8px;font-size:17px;font-weight:400;color:var(--muted)}
+#rq .rq__foot{padding:22px 24px 24px;background:#fff;flex-shrink:0;max-height:52dvh;overflow:auto;overscroll-behavior:contain}
+#rq .rq__hint{line-height:1.5;margin:0 0 20px}
+#rq .rq__btns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#rq .rq__send{grid-column:1/-1;min-height:60px;font-size:18px;padding:16px 12px}
+#rq .rq__copy,#rq .rq__clear{min-height:52px;margin:0;padding:12px 8px;font-size:13px;line-height:1.25;min-width:0}
+#rq .rq__copy,#rq .rq__clear{background:#fff;color:#14181D;border-color:#14181D}
+#rq .rq__copy:hover,#rq .rq__clear:hover,#rq .rq__copy:focus-visible,#rq .rq__clear:focus-visible{background:#F5F7F8;color:#14181D;border-color:#14181D}
+#rq .rq__send:hover,#rq .rq__send:focus-visible{background:#D9743A;color:#0B0E11;border-color:#D9743A}
+#rq .rq__copy{grid-column:1;grid-row:2}
+#rq .rq__clear{grid-column:2;grid-row:2}
+#rq .rq__copy .i{flex-shrink:0;width:20px;height:20px}
+#rq .rq__warn{margin:16px 0 0;font-size:13px}
+#rq :focus-visible{outline:2px solid var(--link);outline-offset:3px}
+#rq [hidden]{display:none!important}
+@media(max-width:599px){
+  #rq .rq__head{padding:20px;gap:12px}
+  #rq .rq__title{font-size:32px;max-width:250px}
+  #rq .rq__body{padding:0 20px 20px}
+  #rq .rq__item{gap:12px;padding:22px 0}
+  #rq .rq__item.has-thumb{grid-template-columns:80px minmax(0,1fr) auto}
+  #rq .rq__thumb{width:80px;height:88px;grid-row:1}
+  #rq .rq__item.has-thumb .rq__info{grid-column:2/-1}
+  #rq .rq__item.has-thumb .rq__qty{grid-column:1/3}
+  #rq .rq__item.has-thumb .rq__del{grid-column:3}
+  #rq .rq__name{font-size:16px;line-height:1.3}
+  #rq .rq__foot{padding:18px 20px 20px}
+  #rq .rq__send{font-size:17px;min-height:56px}
+  #rq .rq__copy,#rq .rq__clear{font-size:12px;gap:6px}
+}
+@media(max-height:550px){#rq .rq__head{padding-block:14px}#rq .rq__title{font-size:28px}#rq .rq__foot{max-height:45dvh}#rq .rq__hint{margin-bottom:12px}}
+@media(prefers-reduced-motion:reduce){#rq,.rq-backdrop{transition:none!important}}

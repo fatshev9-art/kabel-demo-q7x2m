@@ -1,0 +1,223 @@
+.catalog .category-wrap{width:min(100%,1760px);margin-inline:auto;padding-inline:var(--gutter)}
+.catalog .category-controls{min-width:0}
+.catalog .category-controls__toggle{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:48px;padding-block:12px;color:var(--ink);font-weight:600;font-size:15px;cursor:pointer;list-style:none}
+.catalog .category-controls__toggle::-webkit-details-marker{display:none}
+.catalog .category-controls__toggle::after{content:'+';color:var(--link);font-size:22px;line-height:1;font-weight:400}
+.catalog .category-controls[open]>.category-controls__toggle::after{content:'−'}
+@media(min-width:600px){.catalog .category-controls.is-ready>.category-controls__toggle{display:none}
+}
+.catalog .category-head{padding-top:38px;padding-bottom:38px}
+.catalog .crumbs ol{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;list-style:none;padding:0;margin:0 0 24px;color:var(--muted);font-size:14px}
+.catalog .crumbs li{display:flex;align-items:center;gap:12px}
+.catalog .crumbs li:not(:last-child)::after{content:'/';color:var(--link)}
+.catalog .crumbs a{display:inline-flex;align-items:center;min-height:32px;text-decoration:none}
+.catalog .crumbs a:hover{text-decoration:underline;text-underline-offset:4px}
+.catalog .category-head h1{font:700 clamp(46px,4.5vw,76px)/1.03 'Kabel Display',sans-serif;letter-spacing:-.012em;max-width:1100px;text-wrap:balance}
+.catalog .category-intro{max-width:880px;font-size:20px;line-height:1.45;color:var(--muted);margin-top:18px}
+.catalog .category-demo{display:inline-block;border:1px solid #CFD5D9;border-left:3px solid var(--accent);padding:7px 12px;margin-top:18px;color:var(--link);font-size:14px;background:#fff}
+.catalog .category-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:36px;align-items:start;padding-bottom:64px}
+.catalog .category-sidebar{padding-top:20px}
+.catalog .category-nav h2{font:700 27px/1.1 'Kabel Display',sans-serif;margin:0 0 16px}
+.catalog .category-nav h2 a{text-decoration:none}
+.catalog .category-nav>ul a,
+.catalog .category-other li a{display:flex;align-items:center;min-height:48px;padding:10px 14px;border-left:3px solid transparent;text-decoration:none;font-size:15px;line-height:1.3;color:var(--muted)}
+.catalog .category-nav a:hover{text-decoration:underline;text-underline-offset:4px;color:var(--link)}
+.catalog .category-nav a[aria-current=page]{background:#F8DFD0;border-left-color:var(--accent);color:var(--ink);font-weight:600}
+.catalog .category-other{margin-top:8px}
+.catalog .category-other summary{cursor:pointer;min-height:44px;padding:10px 0;color:var(--link);font-size:14px}
+.catalog .category-other li a{font-size:14px;padding-inline:12px}
+.catalog .category-filter{margin-top:26px;padding-top:26px;border-top:1px solid var(--line)}
+.catalog .category-filter fieldset{border:0;padding:0;margin:0;min-inline-size:0}
+.catalog .category-filter legend{font:700 25px/1.2 'Kabel Display',sans-serif;padding:0;margin-bottom:12px}
+.catalog .force-option{display:flex;align-items:center;gap:12px;min-height:44px;cursor:pointer;font-size:16px}
+.catalog .force-option input{appearance:none;margin:0;width:20px;height:20px;border:1px solid #707C85;background:#fff;display:grid;place-content:center;cursor:pointer;flex-shrink:0}
+.catalog .force-option input:checked{background:var(--accent);border-color:var(--link)}
+.catalog .force-option input:checked::after{content:'';width:10px;height:6px;border-left:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(-45deg) translateY(-1px)}
+.catalog .force-option:hover span{color:var(--link)}
+.catalog .filter-reset{border:0;background:none;padding:8px 0;min-height:44px;margin-top:10px;color:var(--link);font-size:14px;text-decoration:underline;text-underline-offset:5px}
+.catalog .filter-reset:disabled{color:var(--muted);text-decoration:none;cursor:default}
+.catalog .category-results{min-width:0;background:#fff;padding:22px 24px 24px}
+.catalog .category-toolbar{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:24px;min-height:44px}
+.catalog .category-count{font-size:16px;font-weight:600;white-space:nowrap}
+.catalog .category-sort{display:flex;align-items:center;gap:12px}
+.catalog .category-sort label{font-size:13px;color:var(--muted)}
+.catalog .category-sort select{max-width:100%;min-height:44px;color:var(--muted);background:#fff;border:1px solid var(--line);font:400 14px/1.2 'Kabel Sans',sans-serif;padding:10px 30px 10px 12px;cursor:pointer}
+.catalog .pgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 24px;align-items:stretch}
+.catalog .pcard{display:flex;flex-direction:column;border:1px solid #DDE2E5;background:#fff;min-width:0}
+.catalog .pcard__fig{display:block;background:#292B2C;aspect-ratio:1.5;overflow:hidden}
+.catalog .pcard__fig img{width:100%;height:100%;object-fit:contain}
+.catalog .pcard__body{display:flex;flex-direction:column;align-items:flex-start;flex:1;padding:20px}
+.catalog .pcard__sku{font-size:13px;letter-spacing:.035em;color:var(--link);margin-bottom:9px}
+.catalog .pcard__name{font:700 clamp(25px,2.05vw,34px)/1.04 'Kabel Display',sans-serif;margin:0 0 18px;overflow-wrap:break-word}
+.catalog .pcard__name a{text-decoration:none}
+.catalog .pcard__name a:hover{color:var(--link);text-decoration:underline;text-underline-offset:4px}
+.catalog .pcard__specs{width:100%;margin:0 0 18px;font-size:12px;line-height:1.4;color:var(--muted)}
+.catalog .pcard__specs>div{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding-block:5px;border-bottom:1px solid #E6EAED}
+.catalog .pcard__specs dt{margin:0}
+.catalog .pcard__specs dd{margin:0;font-weight:600;white-space:nowrap;color:var(--ink)}
+.catalog .pcard__price{font-size:17px;font-weight:600;margin-top:auto;margin-bottom:16px}
+.catalog .pcard__act{display:flex;min-height:48px;width:100%}
+.catalog .pcard__act .btn{min-width:136px;min-height:48px;padding:12px 20px;font-size:15px}
+.catalog .pcard__act .btn:hover{background:#F29B67;border-color:#F29B67}
+.catalog .pcard__act .rq-stepper{margin:0;align-self:stretch;min-height:48px;grid-column:auto}
+.catalog .pcard__act .rq__step{height:46px;width:42px}
+.catalog .pcard__more{display:inline-flex;align-items:center;gap:18px;min-height:44px;color:var(--link);font-size:15px;text-decoration:underline;text-underline-offset:5px;margin-top:8px}
+.catalog .pcard__more .i{width:18px;height:18px}
+.catalog .pcard__description{width:100%;border-top:1px solid #E6EAED;margin-top:10px;padding-top:4px}
+.catalog .pcard__description summary{font-size:12px;min-height:44px;display:flex;align-items:center;gap:8px;color:var(--muted);cursor:pointer;list-style:none}
+.catalog .pcard__description summary::after{content:'+';font-size:18px;margin-left:auto}
+.catalog .pcard__description[open] summary::after{content:'−'}
+.catalog .pcard__description p{font-size:14px;line-height:1.5;color:var(--muted);padding-bottom:12px}
+.catalog .category-empty{padding:36px 0;color:var(--muted)}
+.catalog .category-reading{border-top:1px solid var(--line);padding-block:46px 60px;display:grid;grid-template-columns:minmax(240px,.95fr) minmax(0,1.4fr);gap:70px}
+.catalog .category-eyebrow{font-size:13px;color:var(--link);margin-bottom:12px}
+.catalog .category-reading h2{font:700 42px/1.08 'Kabel Display',sans-serif;margin-bottom:18px}
+.catalog .category-reading__intro>p:last-child{font-size:17px;color:var(--muted);max-width:600px}
+.catalog .category-reading li a{display:flex;justify-content:space-between;align-items:center;gap:30px;min-height:76px;padding-block:18px;border-bottom:1px solid var(--line);text-decoration:none;font:700 28px/1.12 'Kabel Display',sans-serif}
+.catalog .category-reading li:first-child a{border-top:1px solid var(--line)}
+.catalog .category-reading li a:hover{color:var(--link)}
+.catalog .category-reading .i{width:22px;height:22px;color:var(--link)}
+.catalog .category-contact{border-top:1px solid var(--line);padding-block:36px 46px;display:flex;justify-content:space-between;align-items:center;gap:36px}
+.catalog .category-contact h2{font:700 34px/1.1 'Kabel Display',sans-serif;margin-bottom:12px}
+.catalog .category-contact p{color:var(--muted);font-size:15px}
+.catalog .category-contact__actions{display:flex;flex-direction:column;align-items:flex-start;flex-shrink:0}
+.catalog .category-contact__actions a{font-size:19px;color:var(--link);min-height:44px;display:flex;align-items:center;text-underline-offset:5px}
+.catalog .category-contact__actions button{min-height:44px;border:0;background:none;padding:0;color:var(--link);font-size:14px;text-decoration:underline;text-underline-offset:5px}
+.catalog .category-contact__actions [role=status]{font-size:13px}
+@media(max-width:767px){.catalog .category-contact{align-items:flex-start;flex-direction:column;gap:22px}
+.catalog .category-contact h2{font-size:30px}
+}
+@media(min-width:1761px){.catalog .category-wrap{padding-inline:0}
+.catalog .category-layout{grid-template-columns:250px minmax(0,1fr);gap:48px}
+.catalog .category-head{padding-top:46px;padding-bottom:46px}
+.catalog .pcard__body{padding:24px}
+.catalog .pcard__name{font-size:36px}
+.catalog .pcard__specs{font-size:14px}
+}
+@media(max-width:1199px){.catalog .category-wrap{padding-inline:32px}
+.catalog .category-layout{grid-template-columns:190px minmax(0,1fr);gap:24px}
+.catalog .category-results{padding:18px}
+.catalog .pgrid{gap:20px 16px}
+.catalog .pcard__body{padding:16px}
+.catalog .category-sort label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.catalog .pcard__name{font-size:27px}
+.catalog .pcard__specs>div{display:block}
+.catalog .pcard__specs dd{padding-top:2px}
+.catalog .category-nav h2{font-size:25px}
+.catalog .category-reading{gap:38px}
+}
+@media(max-width:959px){.catalog .category-wrap{padding-inline:24px}
+.catalog .category-head{padding-block:28px}
+.catalog .category-head h1{font-size:52px}
+.catalog .category-intro{font-size:18px}
+.catalog .category-layout{grid-template-columns:1fr;gap:24px}
+.catalog .category-sidebar{display:grid;grid-template-columns:1fr 1fr;gap:30px;padding:0}
+.catalog .category-filter{margin:0;padding:0 0 0 24px;border-top:0;border-left:1px solid var(--line)}
+.catalog .category-filter fieldset{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 14px}
+.catalog .category-filter legend{font-size:24px}
+.catalog .category-results{padding:22px}
+.catalog .pgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.catalog .pcard__name{font-size:32px}
+.catalog .pcard__specs>div{display:flex}
+.catalog .pcard__body{padding:20px}
+.catalog .category-sort label{position:static;width:auto;height:auto;overflow:visible;clip-path:none}
+.catalog .category-reading{grid-template-columns:1fr;gap:28px;padding-block:36px 44px}
+.catalog .category-reading h2{font-size:38px}
+}
+@media(max-width:599px){.catalog .category-wrap{padding-inline:20px}
+.catalog .category-head{padding-block:22px 26px}
+.catalog .crumbs ol{font-size:12px;gap:0 8px;margin-bottom:18px}
+.catalog .crumbs li{gap:8px}
+.catalog .category-head h1{font-size:44px;max-width:100%}
+.catalog .category-intro{font-size:17px;line-height:1.45;margin-top:14px}
+.catalog .category-demo{font-size:12px;padding:8px 10px;margin-top:16px;line-height:1.45}
+.catalog .category-layout{gap:26px;padding-bottom:36px}
+.catalog .category-sidebar{display:block}
+.catalog .category-nav h2{font-size:24px;margin-bottom:10px}
+.catalog .category-nav>ul{display:flex;flex-wrap:wrap;gap:6px}
+.catalog .category-nav>ul a{padding:10px 12px;border:1px solid var(--line);min-height:44px;font-size:13px}
+.catalog .category-nav>ul a[aria-current=page]{border-color:var(--accent)}
+.catalog .category-other{margin-top:4px}
+.catalog .category-other summary{font-size:13px}
+.catalog .category-other ul{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.catalog .category-other li a{font-size:12px;padding:10px 0;border-bottom:1px solid var(--line);border-left:0}
+.catalog .category-filter{padding:18px 0 0;margin-top:10px;border-left:0;border-top:1px solid var(--line)}
+.catalog .category-filter fieldset{display:flex;flex-wrap:wrap;gap:4px 18px}
+.catalog .category-filter legend{font-size:23px;margin-bottom:10px}
+.catalog .force-option{gap:8px;min-width:72px;min-height:44px;font-size:15px}
+.catalog .filter-reset{margin-top:2px;font-size:13px}
+.catalog .category-results{padding:18px 14px}
+.catalog .category-toolbar{align-items:flex-start;flex-direction:column;gap:10px;margin-bottom:18px}
+.catalog .category-count{font-size:15px}
+.catalog .category-sort{width:100%;gap:10px}
+.catalog .category-sort label{font-size:12px;flex:0 0 auto}
+.catalog .category-sort select{flex:1;min-width:0;font-size:13px;padding-left:10px}
+.catalog .pgrid{grid-template-columns:1fr;gap:22px}
+.catalog .pcard__body{padding:20px}
+.catalog .pcard__name{font-size:32px;max-width:260px}
+.catalog .pcard__specs{font-size:13px}
+.catalog .pcard__specs>div{display:flex}
+.catalog .pcard__act .btn{min-width:148px}
+.catalog .category-reading{padding-block:30px 40px}
+.catalog .category-reading h2{font-size:34px}
+.catalog .category-reading li a{font-size:26px;min-height:76px;gap:20px}
+}
+@media(max-width:599px){.catalog .category-controls{border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.catalog .category-controls[open]>.category-sidebar{padding-block:14px 8px}
+.catalog .category-layout{gap:18px}
+.catalog .category-head{padding-block:18px 20px}
+.catalog .category-head h1{font-size:40px}
+.catalog .crumbs ol{margin-bottom:14px}
+.catalog .crumbs a{min-height:24px}
+.catalog .category-intro{margin-top:12px}
+.catalog .category-demo{margin-top:12px}
+.catalog .category-toolbar{flex-direction:row;align-items:center;gap:12px}
+.catalog .category-sort{min-width:0;width:auto;flex:1}
+.catalog .category-sort label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.catalog .category-sort select{width:100%}
+}
+
+
+/* Universal data and subcategory cases retain the approved category composition. */
+.catalog { background:var(--paper,#F5F7F8); color:var(--ink,#14181D); }
+.catalog .rv { opacity:1; transform:none; transition:none; }
+.catalog .category-content,.catalog .category-subcategories { min-width:0; }
+.catalog .doc__head { background:transparent; color:inherit; border:0; }
+.catalog .doc__head-in { max-width:none; padding:0; }
+.catalog .doc__h1,.catalog h2,.catalog h3 { text-transform:none; letter-spacing:normal; }
+.catalog .crumbs,.catalog .crumbs ol { text-transform:none; letter-spacing:normal; font-family:'Kabel Sans','WPG Body',sans-serif; font-weight:400; }
+.catalog .crumbs ol { white-space:normal; overflow:visible; }
+.catalog .crumbs li { min-width:0; max-width:100%; flex:0 1 auto; }
+.catalog .crumbs li+li::before { content:none; margin:0; }
+.catalog .category-head .prevnote { display:inline-block; border:1px solid var(--line); border-left:3px solid var(--accent); background:#fff; padding:8px 12px; margin-top:18px; font-size:13px; color:var(--link); }
+.catalog .category-head .prevnote span { margin-right:8px; }
+.catalog .prevnote span { font:inherit; letter-spacing:normal; text-transform:none; background:transparent; color:inherit; padding:0; }
+.catalog .category-head .doc__lead { max-width:880px; font:400 20px/1.45 'Kabel Sans','WPG Body',sans-serif; color:var(--muted); margin-top:18px; }
+.catalog .category-head .doc__meta { display:flex; gap:20px 32px; flex-wrap:wrap; margin-top:22px; padding:0; font:400 15px/1.4 'Kabel Sans','WPG Body',sans-serif; }
+.catalog .category-head .doc__meta li { display:flex; gap:10px; }
+.catalog .category-head .doc__meta span { color:var(--muted); }
+.catalog .category-nav ul,.catalog .category-reading ul,.catalog .pgrid { list-style:none; margin:0; padding:0; }
+.catalog .category-nav h2 { text-transform:none; }
+.catalog .category-page-note { color:var(--muted); font-size:14px; }
+.catalog .category-results .pcard__fig img.fig-schema,.catalog .ccard .pcard__fig img.fig-schema { background:var(--paper,#F5F7F8); padding:18px; }
+.catalog .pcard__fig img { display:block; margin:0; }
+.catalog .pcard__specs>div { min-width:0; }
+.catalog .pcard__specs dt { min-width:0; overflow-wrap:anywhere; }
+.catalog .pcard__specs dd { white-space:normal; overflow-wrap:anywhere; min-width:0; max-width:65%; text-align:right; }
+.catalog .pcard__act { margin-top:auto; }
+.catalog .pcard__price { margin-top:auto; }
+.catalog .pcard__description .pcard__text { margin:0; }
+.catalog .category-subcategories { margin-bottom:32px; }
+.catalog .category-subcategories h2,.catalog .catalog-hub>h2 { font:700 32px/1.12 'Kabel Display','WPG Display',sans-serif; margin:0 0 24px; }
+.catalog .cgrid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.catalog .ccard .pcard__meta { font:400 13px/1.5 'Kabel Sans','WPG Body',sans-serif; color:var(--muted); padding-top:12px; overflow-wrap:anywhere; }
+.catalog .ccard .pcard__text { font:400 15px/1.5 'Kabel Sans','WPG Body',sans-serif; color:var(--muted); }
+.catalog .catalog-hub { padding-bottom:64px; }
+.catalog .catalog-pages { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding-top:28px; }
+.catalog .catalog-pages p { flex-basis:100%; color:var(--muted); font-size:14px; margin-bottom:8px; }
+.catalog .catalog-pages .btn { min-width:44px; min-height:44px; padding:8px 12px; }
+.catalog .catalog-pages [aria-current=page] { background:var(--ink); color:#fff; border-color:var(--ink); }
+.catalog .category-controls { align-self:start; }
+@media(max-width:1199px){.catalog .pcard__specs dd { max-width:100%; text-align:left; }}
+@media(max-width:959px){.catalog .category-sidebar:not(:has(.category-filter)){display:block}.catalog .cgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.catalog .pcard__specs dd{max-width:65%;text-align:right}}
+@media(max-width:599px){.catalog .cgrid{grid-template-columns:1fr}.catalog .category-head .doc__lead{font-size:17px}.catalog .category-subcategories{margin-bottom:24px}.catalog .catalog-hub{padding-bottom:36px}.catalog .category-subcategories h2{font-size:29px}.catalog .pcard__specs dd{max-width:62%}}
