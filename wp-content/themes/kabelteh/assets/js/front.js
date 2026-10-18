@@ -160,8 +160,8 @@
       var bad = [], empty = [];
       if (isNaN(w)) empty.push('массу 1 м'); else if (!(w > 0 && w < 200)) bad.push('массу 1 м');
       if (isNaN(L)) empty.push('длину'); else if (!(L > 0 && L <= 20000)) bad.push('длину');
-      if (isNaN(mu)) empty.push('коэффициент трения'); else if (!(mu > 0 && mu <= 1.5)) bad.push('коэффициент трения (0–1,5)');
-      if (angles.some(function (a) { return !(a >= 0 && a <= 360); })) bad.push('углы (0–360°)');
+      if (isNaN(mu)) empty.push('коэффициент трения'); else if (!(mu > 0 && mu <= 1.5)) bad.push('коэффициент трения (0-1,5)');
+      if (angles.some(function (a) { return !(a >= 0 && a <= 360); })) bad.push('углы (0-360°)');
       if (bad.length || empty.length) {
         out.textContent = '0,00';
         out.classList.add('is-empty');
@@ -172,6 +172,12 @@
       var T = mu * w * 9.81 * L;
       var total = 0;
       angles.forEach(function (a) { total += a; T = T * Math.exp(mu * a * Math.PI / 180); });
+      if (!isFinite(T)) {
+        out.textContent = '0,00';
+        out.classList.add('is-empty');
+        hint.textContent = 'Параметры выходят за пределы этой оценки. Проверьте повороты и выполните отдельный расчёт трассы.';
+        return;
+      }
       out.textContent = (T / 1000).toLocaleString('ru-RU', { maximumFractionDigits: 2, minimumFractionDigits: 2 });
       if (!reduce) { out.classList.remove('is-pulse'); void out.offsetWidth; out.classList.add('is-pulse'); }
       hint.textContent = angles.length
