@@ -25,11 +25,6 @@
   var items = [];
   var lastFocus = null;
   var liveTimer = 0;
-  var summaryEl = panel.querySelector('[data-rq-summary]');
-  var catalogUrl = panel.getAttribute('data-rq-catalog') || '';
-  var catalogImageBase = panel.getAttribute('data-rq-assets') || '';
-  var catalogImages = null;
-  var catalogRequested = false;
 
   /* ---------- данные ---------- */
   function clean(raw) {
@@ -118,54 +113,10 @@
     if (disabled) b.setAttribute('aria-disabled', 'true');
     return b;
   }
-  /* Existing catalog photographs decorate rows without replacing focused controls. */
-  function decorateRows() {
-    if (!catalogImages) return;
-    Array.prototype.forEach.call(listEl.querySelectorAll('[data-rq-row]'), function (row) {
-      if (row.querySelector('.rq__thumb') || row.getAttribute('data-rq-image-failed')) return;
-      var image = catalogImages[row.getAttribute('data-rq-row')];
-      if (!image) return;
-      var photo = mk('img', 'rq__thumb');
-      photo.alt = '';
-      photo.width = 112;
-      photo.height = 112;
-      photo.decoding = 'async';
-      photo.addEventListener('error', function () {
-        row.setAttribute('data-rq-image-failed', 'true');
-        row.classList.remove('has-thumb');
-        if (photo.parentNode) photo.parentNode.removeChild(photo);
-      });
-      photo.src = catalogImageBase + encodeURIComponent(image);
-      row.classList.add('has-thumb');
-      row.insertBefore(photo, row.firstChild);
-    });
-  }
-  function loadCatalogImages() {
-    if (catalogRequested) return;
-    catalogRequested = true;
-    if (!catalogUrl || !catalogImageBase || typeof window.fetch !== 'function') return;
-    fetch(catalogUrl, { credentials: 'same-origin' }).then(function (response) {
-      if (!response.ok) throw new Error('Catalog unavailable');
-      return response.json();
-    }).then(function (catalog) {
-      if (!Array.isArray(catalog)) return;
-      catalogImages = Object.create(null);
-      catalog.forEach(function (entry) {
-        if (!entry || typeof entry.sku !== 'string' || typeof entry.image !== 'string') return;
-        // Filename only: no arbitrary URLs, path segments or invented placeholders.
-        if (/^[a-zA-Z0-9][a-zA-Z0-9._-]*\.(?:webp|png|jpe?g|avif)$/i.test(entry.image)) {
-          catalogImages[entry.sku] = entry.image;
-        }
-      });
-      decorateRows();
-    }).catch(function () { /* Text, quantity and mail draft stay available. */ });
-  }
-
   function render(focusKey) {
     while (listEl.firstChild) listEl.removeChild(listEl.firstChild);
     items.forEach(function (it) {
       var li = mk('li', 'rq__item');
-      li.setAttribute('data-rq-row', it.sku);
       var info = mk('div', 'rq__info');
       info.appendChild(mk('span', 'rq__sku', it.sku));
       info.appendChild(mk('span', 'rq__name', it.name));
@@ -189,13 +140,7 @@
       listEl.appendChild(li);
     });
 
-    decorateRows();
     var n = items.length;
-    if (summaryEl) {
-      summaryEl.hidden = n === 0;
-      var summaryCount = summaryEl.querySelector('[data-rq-summary-count]');
-      if (summaryCount) summaryCount.textContent = 'Позиций: ' + n + '. Всего единиц: ' + total() + '.';
-    }
     emptyEl.hidden = n > 0;
     listEl.hidden = n === 0;
     clearEl.disabled = n === 0;
@@ -212,7 +157,7 @@
     if (toggle) {
       toggle.hidden = false;
       toggle.classList.toggle('is-empty', n === 0);
-      toggle.setAttribute('aria-label', 'Заявка на оборудование, позиций: ' + n);
+      toggle.setAttribute('aria-label', 'Корзина, позиций: ' + n);
       if (countEl) countEl.textContent = String(n);
     }
     // кнопки «В корзину» на странице: после добавления вместо кнопки блок «− N +»
@@ -240,21 +185,8 @@
         num.textContent = String(it.qty);
         num.setAttribute('aria-label', 'Количество ' + it.qty);
       }
-      var quantityId = b.getAttribute('data-rq-quantity');
-      var quantityInput = quantityId ? doc.getElementById(quantityId) : null;
-      var quantityControl = quantityInput ? quantityInput.closest('[data-rq-quantity-control]') : null;
-      var active = doc.activeElement;
-      var focusHiddenControl = quantityControl && (active === b || quantityControl.contains(active));
-      var focusHiddenStepper = quantityControl && st.contains(active);
       b.hidden = !!it;
       st.hidden = !it;
-      if (quantityControl) quantityControl.hidden = !!it;
-      if (it && focusHiddenControl) {
-        var nextFocus = st.querySelector('[data-act="inc"]:not([aria-disabled="true"])') || st.querySelector('[data-act="dec"]');
-        nextFocus.focus();
-      } else if (!it && focusHiddenStepper) {
-        b.focus();
-      }
     });
     // возвращаем фокус на ту же кнопку после перерисовки списка
     if (focusKey && isOpen()) {
@@ -276,7 +208,6 @@
     doc.body.classList.add('rq-open');
     if (toggle) toggle.setAttribute('aria-expanded', 'true');
     closeEl.focus();
-    loadCatalogImages();
   }
   function close() {
     if (!isOpen()) return;
@@ -295,14 +226,12 @@
   }
 
   /* ---------- действия ---------- */
-  function add(sku, name, quantity) {
-    quantity = Number.isInteger(quantity) && quantity > 0 ? Math.min(quantity, MAX_QTY) : 1;
+  function add(sku, name) {
     var it = find(sku);
     if (it) {
-      if (it.qty >= MAX_QTY) return;
-      it.qty = Math.min(MAX_QTY, it.qty + quantity);
+      if (it.qty < MAX_QTY) it.qty += 1;
     } else if (items.length < MAX_ITEMS) {
-      items.push({ sku: sku, name: name, qty: quantity });
+      items.push({ sku: sku, name: name, qty: 1 });
     } else {
       announce('В корзине уже ' + MAX_ITEMS + ' позиций, добавить ещё нельзя');
       return;
@@ -335,23 +264,7 @@
     if (!t || !t.closest) return;
     var addBtn = t.closest('[data-rq-add]');
     if (addBtn) {
-      var quantityId = addBtn.getAttribute('data-rq-quantity');
-      var quantityInput = quantityId ? doc.getElementById(quantityId) : null;
-      var quantity;
-      if (addBtn.hasAttribute('data-rq-quantity')) {
-        if (!quantityInput) return;
-        quantity = quantityInput.valueAsNumber;
-        if (!Number.isInteger(quantity) || quantity < 1 || quantity > MAX_QTY) {
-          quantityInput.setCustomValidity('Введите целое число от 1 до 999');
-          quantityInput.reportValidity();
-          quantityInput.focus();
-          announce('Введите целое число от 1 до 999');
-          return;
-        }
-        quantityInput.value = String(quantity);
-        quantityInput.setCustomValidity('');
-      }
-      add(addBtn.getAttribute('data-sku'), addBtn.getAttribute('data-name'), quantity);
+      add(addBtn.getAttribute('data-sku'), addBtn.getAttribute('data-name'));
       return;
     }
     if (toggle && t.closest('[data-rq-toggle]')) {

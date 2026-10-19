@@ -1,4 +1,4 @@
-/* Главная: слайдер (10 слайдов, кроссфейд), вкладки, калькулятор, счётчики. Без библиотек. */
+/* Главная v3: слайдер (10 слайдов, кроссфейд, сегменты с прогрессом), подбор по трассе, калькулятор тягового усилия. Без библиотек. */
 (function () {
   'use strict';
 
@@ -8,54 +8,53 @@
 
   /* ---------- слайдер ---------- */
   var hero = doc.querySelector('.hero');
-  if (hero && hero.querySelector('.slide') && hero.querySelector('.js-prev')) {
-    var slides = Array.prototype.slice.call(hero.querySelectorAll('.slide'));
+  var slides = hero ? Array.prototype.slice.call(hero.querySelectorAll('.slide')) : [];
+  if (hero && slides.length > 1) {
     var dots = Array.prototype.slice.call(hero.querySelectorAll('.js-dot'));
     var counter = hero.querySelector('.js-count');
+    var ct = hero.querySelector('.js-ct');
+    var cx = hero.querySelector('.js-cx');
     var live = hero.querySelector('.hero__live');
     var playBtn = hero.querySelector('.js-play');
     var interval = parseInt(hero.getAttribute('data-interval'), 10) || 7000;
-    var autoplay = hero.getAttribute('data-autoplay') === '1' && !reduce && slides.length > 1;
+    var autoplay = hero.getAttribute('data-autoplay') === '1' && !reduce;
     var current = 0, timer = 0, userStopped = false, hovering = false, focused = false;
 
-    hero.classList.add('hero--js');
     hero.style.setProperty('--interval', interval + 'ms');
-    // кроссфейд: все слайды лежат друг на друге, скрытые прячутся через visibility и inert
     slides.forEach(function (sl, k) {
-      // грузим только первый слайд, остальные открываются перед показом (экономия трафика)
-      sl.hidden = k !== 0;
-      sl.setAttribute('aria-hidden', k === 0 ? 'false' : 'true');
-      if (k !== 0) sl.setAttribute('inert', '');
+      if (k !== 0) sl.setAttribute('aria-hidden', 'true');
     });
-
-    // заранее открываем второй слайд, когда страница уже загружена
+    // второй слайд открываем заранее, когда страница уже загружена
     window.addEventListener('load', function () { setTimeout(function () { if (slides[1]) slides[1].hidden = false; }, 1500); });
 
     var show = function (i, announce) {
       i = (i + slides.length) % slides.length;
       if (i === current) return;
+      var next = slides[i];
+      next.hidden = false;
+      void next.offsetWidth;
+      slides[(i + 1) % slides.length].hidden = false;
       slides[current].classList.remove('is-active');
       slides[current].setAttribute('aria-hidden', 'true');
-      slides[current].setAttribute('inert', '');
-      slides[i].hidden = false;
-      void slides[i].offsetWidth;
-      slides[(i + 1) % slides.length].hidden = false;
-      slides[i].removeAttribute('inert');
-      slides[i].setAttribute('aria-hidden', 'false');
-      slides[i].classList.add('is-active');
-      dots.forEach(function (d, k) {
-        if (k === i) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current');
-      });
+      next.classList.add('is-active');
+      next.removeAttribute('aria-hidden');
+      dots.forEach(function (d, k) { if (k === i) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current'); });
       current = i;
       if (counter) counter.textContent = pad(i + 1);
-      if (announce && live) live.textContent = slides[i].getAttribute('aria-label');
+      if (ct) {
+        ct.textContent = next.getAttribute('data-title') || '';
+        var url = next.getAttribute('data-url');
+        if (url) ct.setAttribute('href', url);
+      }
+      if (cx) cx.textContent = next.getAttribute('data-text') || '';
+      if (announce && live) live.textContent = next.getAttribute('aria-label') || '';
       restartBar();
     };
+    var isPlaying = function () { return autoplay && !userStopped; };
     var restartBar = function () {
       hero.classList.remove('hero--playing');
       if (isPlaying()) { void hero.offsetWidth; hero.classList.add('hero--playing'); }
     };
-    var isPlaying = function () { return autoplay && !userStopped; };
     var schedule = function () {
       clearTimeout(timer);
       var paused = hovering || focused;
@@ -71,13 +70,13 @@
     };
     var go = function (i) { show(i, true); stop(); };
 
-    hero.querySelector('.js-prev').addEventListener('click', function () { go(current - 1); });
-    hero.querySelector('.js-next').addEventListener('click', function () { go(current + 1); });
-    dots.forEach(function (d) {
-      d.addEventListener('click', function () { go(parseInt(d.getAttribute('data-index'), 10)); });
-    });
+    var prev = hero.querySelector('.js-prev');
+    var nextBtn = hero.querySelector('.js-next');
+    if (prev) prev.addEventListener('click', function () { go(current - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { go(current + 1); });
+    dots.forEach(function (d) { d.addEventListener('click', function () { go(parseInt(d.getAttribute('data-index'), 10)); }); });
     hero.addEventListener('keydown', function (e) {
-      if (e.target.closest('a')) return;
+      if (e.target.closest('a, input, select')) return;
       if (e.key === 'ArrowRight') { e.preventDefault(); go(current + 1); }
       if (e.key === 'ArrowLeft') { e.preventDefault(); go(current - 1); }
     });
@@ -104,11 +103,10 @@
       schedule();
     }
 
-    // свайп
+    // свайп на сенсорных экранах
     var sx = null, sy = null;
-    var stage = hero.querySelector('.hero__stage');
-    stage.addEventListener('pointerdown', function (e) { if (e.pointerType !== 'mouse') { sx = e.clientX; sy = e.clientY; } });
-    stage.addEventListener('pointerup', function (e) {
+    hero.addEventListener('pointerdown', function (e) { if (e.pointerType !== 'mouse') { sx = e.clientX; sy = e.clientY; } });
+    hero.addEventListener('pointerup', function (e) {
       if (sx === null) return;
       var dx = e.clientX - sx, dy = e.clientY - sy;
       sx = sy = null;
@@ -116,31 +114,32 @@
     });
   }
 
-  /* ---------- вкладки (ARIA tabs) ---------- */
-  Array.prototype.forEach.call(doc.querySelectorAll('[data-tabs]'), function (box) {
-    var tabs = Array.prototype.slice.call(box.querySelectorAll('[role="tab"]'));
-    box.classList.add('tabs--js');
-    var select = function (i, focus) {
-      tabs.forEach(function (t, k) {
-        var on = k === i;
-        t.setAttribute('aria-selected', on ? 'true' : 'false');
-        t.tabIndex = on ? 0 : -1;
-        var p = doc.getElementById(t.getAttribute('aria-controls'));
-        if (p) p.hidden = !on;
-      });
-      if (focus) tabs[i].focus();
-      tabs[i].scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
+  /* ---------- подбор по трассе ---------- */
+  Array.prototype.forEach.call(doc.querySelectorAll('[data-pick]'), function (box) {
+    box.classList.add('is-js');
+    var cBtns = Array.prototype.slice.call(box.querySelectorAll('[data-pick-c]'));
+    var wLists = Array.prototype.slice.call(box.querySelectorAll('[data-pick-w-of]'));
+    var outs = Array.prototype.slice.call(box.querySelectorAll('[data-pick-out]'));
+    var setOut = function (key) {
+      outs.forEach(function (o) { o.classList.toggle('is-on', o.getAttribute('data-pick-out') === key); });
     };
-    tabs.forEach(function (t, i) {
-      t.addEventListener('click', function () { select(i, false); });
-      t.addEventListener('keydown', function (e) {
-        var n = tabs.length, to = null;
-        if (e.key === 'ArrowRight') to = (i + 1) % n;
-        else if (e.key === 'ArrowLeft') to = (i - 1 + n) % n;
-        else if (e.key === 'Home') to = 0;
-        else if (e.key === 'End') to = n - 1;
-        if (to !== null) { e.preventDefault(); select(to, true); }
+    var setWhere = function (btn) {
+      var list = btn.closest('[data-pick-w-of]');
+      Array.prototype.forEach.call(list.querySelectorAll('[data-pick-w]'), function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+      setOut(btn.getAttribute('data-pick-w'));
+    };
+    cBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var g = btn.getAttribute('data-pick-c');
+        cBtns.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+        wLists.forEach(function (l) { l.classList.toggle('is-on', l.getAttribute('data-pick-w-of') === g); });
+        var list = box.querySelector('[data-pick-w-of="' + g + '"]');
+        var sel = list && (list.querySelector('[aria-pressed="true"]') || list.querySelector('[data-pick-w]'));
+        if (sel) setWhere(sel);
       });
+    });
+    Array.prototype.forEach.call(box.querySelectorAll('[data-pick-w]'), function (btn) {
+      btn.addEventListener('click', function () { setWhere(btn); });
     });
   });
 
@@ -150,69 +149,34 @@
     var out = box.querySelector('.js-calc-out');
     var hint = box.querySelector('.js-calc-hint');
     var num = function (el) {
-      var v = (el.value || '').replace(/\s/g, '').replace(',', '.');
+      var v = ((el && el.value) || '').replace(/\s/g, '').replace(',', '.');
       return v === '' ? NaN : Number(v);
     };
+    var fail = function (text) {
+      out.textContent = '0,00';
+      out.classList.add('is-empty');
+      hint.textContent = text;
+    };
     var calc = function () {
-      var w = num(get('w')), L = num(get('l')), mu = num(get('mu'));
-      var raw = (get('a').value || '').trim();
-      var angles = raw ? raw.split(/[;\s]+|,\s+/).map(function (x) { return Number(x.replace(',', '.')); }) : [];
+      var w = num(get('w')), L = num(get('l')), mu = num(get('mu')), turns = num(get('t'));
       var bad = [], empty = [];
-      if (isNaN(w)) empty.push('массу 1 м'); else if (!(w > 0 && w < 200)) bad.push('массу 1 м');
-      if (isNaN(L)) empty.push('длину'); else if (!(L > 0 && L <= 20000)) bad.push('длину');
-      if (isNaN(mu)) empty.push('коэффициент трения'); else if (!(mu > 0 && mu <= 1.5)) bad.push('коэффициент трения (0-1,5)');
-      if (angles.some(function (a) { return !(a >= 0 && a <= 360); })) bad.push('углы (0-360°)');
+      if (isNaN(w)) empty.push('массу 1 м'); else if (!(w > 0 && w < 200)) bad.push('массу 1 м (до 200 кг)');
+      if (isNaN(L)) empty.push('длину'); else if (!(L > 0 && L <= 20000)) bad.push('длину (до 20 000 м)');
+      if (isNaN(mu) || !(mu > 0 && mu <= 1.5)) bad.push('условия протяжки');
+      if (isNaN(turns) || turns < 0) turns = 0;
       if (bad.length || empty.length) {
-        out.textContent = '0,00';
-        out.classList.add('is-empty');
-        hint.textContent = bad.length ? 'Проверьте: ' + bad.join(', ') + '.' : 'Заполните: ' + empty.join(', ') + '.';
+        fail(bad.length ? 'Проверьте: ' + bad.join(', ') + '.' : 'Заполните: ' + empty.join(', ') + '.');
         return;
       }
+      var T = mu * w * 9.81 * L * Math.exp(mu * turns * Math.PI / 2);
+      if (!isFinite(T)) { fail('Параметры выходят за пределы этой оценки: нужен отдельный расчёт трассы.'); return; }
       out.classList.remove('is-empty');
-      var T = mu * w * 9.81 * L;
-      var total = 0;
-      angles.forEach(function (a) { total += a; T = T * Math.exp(mu * a * Math.PI / 180); });
-      if (!isFinite(T)) {
-        out.textContent = '0,00';
-        out.classList.add('is-empty');
-        hint.textContent = 'Параметры выходят за пределы этой оценки. Проверьте повороты и выполните отдельный расчёт трассы.';
-        return;
-      }
       out.textContent = (T / 1000).toLocaleString('ru-RU', { maximumFractionDigits: 2, minimumFractionDigits: 2 });
       if (!reduce) { out.classList.remove('is-pulse'); void out.offsetWidth; out.classList.add('is-pulse'); }
-      hint.textContent = angles.length
-        ? 'Прямой участок ' + L + ' м и ' + angles.length + ' пов. на ' + total + '°.'
-        : 'Прямой участок ' + L + ' м без поворотов.';
+      hint.textContent = 'Прямой участок ' + L.toLocaleString('ru-RU') + ' м, поворотов по 90°: ' + turns + '. Сравните с допустимым тяжением кабеля.';
     };
     box.addEventListener('input', calc);
+    box.addEventListener('change', calc);
+    calc();
   });
-
-  /* ---------- счётчики ---------- */
-  var nums = doc.querySelectorAll('.js-counter');
-  if (nums.length && !reduce && 'IntersectionObserver' in window) {
-    var fmt = function (v) { return Math.round(v).toLocaleString('ru-RU'); };
-    var run = function (el) {
-      var to = parseFloat(el.getAttribute('data-to')) || 0;
-      var t0 = null, dur = 1400;
-      var step = function (t) {
-        if (t0 === null) t0 = t;
-        var k = Math.min(1, (t - t0) / dur);
-        var eased = 1 - Math.pow(1 - k, 3);
-        el.textContent = k < 1 ? fmt(to * eased) : el.getAttribute('data-final');
-        if (k < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    };
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (en.isIntersecting) { run(en.target); io.unobserve(en.target); }
-      });
-    }, { threshold: 0.6 });
-    Array.prototype.forEach.call(nums, function (el) {
-      el.setAttribute('data-final', el.textContent);
-      // до появления в кадре показываем 0, чтобы не было скачка с итога на ноль
-      el.textContent = '0';
-      io.observe(el);
-    });
-  }
 })();
